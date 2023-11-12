@@ -19,6 +19,25 @@
         <img src="../images/DayTime/rain.png" class="weather-icon">
         <h1 class="temp">22°</h1>
         <h2 class="city">New York</h2>
+       
+        <div class="temp_details">
+            <h1>Feels Like</h1>
+            <p class = "feels_like">20°</p>
+        </div>
+        <div class="time">
+            <h1>Local Time (24hr):</h1>
+            <p class = "local_time">10:00:00</p>
+        </div>
+        <div class="sun">
+            <div class="sunrise">
+                <img src = "../images/icons/sunrise.png">
+                <p class="sunrise_time">10:00:00</p>
+            </div>
+            <div class="sunset">
+                <img src = "../images/icons/sunset.png">
+                <p class="sunset_time">10:00:00</p>
+            </div>
+        </div>
         <div class="details">
             <div class="humidity">
                 <img src="../images/DayAndNight/humidity.png">
@@ -34,9 +53,88 @@
                     <p>Wind Speed</p>
                 </div>
             </div>
+            <div class="precipitation">
+                <img src="../images/DayAndNight/rain.png">
+                <div>
+                    <p class="precipitation_text">1%</p>
+                    <p>Precipitation</p>
+                </div>
+            </div>
         </div>
     </div>
  </div>
+
+<script>
+    const apiKey = "529d44024822217b16c2f5de0495f0fb"
+    const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+    const searchBox = document.querySelector(".search input");
+    const searchBtn = document.querySelector(".search button");
+
+    async function checkWeather(city){
+        const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+        var data = await response.json();
+        
+        
+        console.log(data);
+       
+
+        document.querySelector(".city").innerHTML = data.name;
+        document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
+        document.querySelector(".feels_like").innerHTML = Math.round(data.main.feels_like) + "°C";
+        document.querySelector(".humidity_text").innerHTML = data.main.humidity + "%";
+        document.querySelector(".wind_text").innerHTML = data.wind.speed + "km/h";
+        //document.querySelector(".precipitation_text").innerHTML = data.wind.speed + "%";
+        
+
+        //get Timezone and display current time of location
+        let currentUTCTime = Date.now();
+        let timezone = data.timezone*1000;
+        let localTime = (currentUTCTime + timezone);
+
+        console.log(localTime)
+
+        //call convertTime to get displayable time for user
+        document.querySelector(".local_time").innerHTML = convertLocalTime(localTime);
+
+
+        //get data for Sunrise and Sunset
+        document.querySelector(".sunset_time").innerHTML = convertLocalTime((data.sys.sunset + data.timezone)*1000);
+        document.querySelector(".sunrise_time").innerHTML = convertLocalTime((data.sys.sunrise + data.timezone)*1000);
+    }
+
+
+    function convertLocalTime(time){
+        const timeObj = new Date(time)
+    
+        let hour = timeObj.getUTCHours();
+        let min = timeObj.getUTCMinutes();
+        console.log(min);
+        let sec = timeObj.getUTCSeconds();
+
+        //Need to add zeros to better display time
+        if (hour < 10){
+            hour = "0" + hour;
+        }
+        if (min < 10){
+            min = "0" + min;
+        }
+        if (sec < 10){
+            sec = "0" + sec;
+        }
+
+        const timeString = `${hour}:${min}:${sec}`;
+
+        return timeString;
+    }
+
+    
+    searchBtn.addEventListener("click", () => {
+        checkWeather(searchBox.value);
+    })
+    
+</script>
+
 
 </body>
 </html>

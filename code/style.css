@@ -64,32 +64,77 @@ body{
     font-weight: 400;
     margin-top: -10px;
 }
+
+.temp_details{
+    align-items: center;
+    margin-top: 0px;
+}
+
+.temp_details h1{
+    opacity: 0.5;
+    font-size: 16px
+}
+
+.feels_like{
+    font-size: 20px;
+    opacity: 0.5;
+}
+
 .details{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
-    margin-top: 50px;
+    padding: 0 0;
+    margin-top: 30px;
 }
-.humidity{
+.humidity, .wind, .precipitation{
     display: flex;
     align-items: center;
     text-align: left;
+    margin-right: 0px;
 }
-.humidity img{
+.humidity img, .wind img, .precipitation img{
     width: 40px;
-    margin-right: 10px;
+    margin-right: 5px;
+}
+.humidity_text, .wind_text, .precipitation_text{
+    font-size: 20px;
+    margin-right: 0px;
+}
 
-}
-.wind{
+.time{
+    width: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
     text-align: left;
+    margin-top: 30px;
 }
-.wind img{
-    width: 40px;
-    margin-right: 10px;
+
+.time h1{
+    font-size: 20px;
 }
-.humidity_text, .wind_text{
-    font-size: 28px;
+.local_time{
+    font-size: 20px;
+    margin-left: 10px;
+}
+
+.sun{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 0px;
+}
+
+.sunrise, .sunset{
+    display: flex;
+    align-items: center;
+    padding:0px 5px;
+    font-size: 16px;
+}
+
+.sunrise img, .sunset img{
+    width: 50px;
 }
