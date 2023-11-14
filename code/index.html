@@ -15,6 +15,9 @@
             <img src="../images/icons/search.png">
         </button>
     </div>
+    <div class = "error">
+        <p>Invalid City Name</p>
+    </div>
     <div class="weather">
         <img src="../images/DayTime/rain.png" class="weather-icon">
         <h1 class="temp">22°</h1>
@@ -70,15 +73,19 @@
 
     const searchBox = document.querySelector(".search input");
     const searchBtn = document.querySelector(".search button");
+    const weatherIcon = document.querySelector(".weather-icon");
 
     async function checkWeather(city){
         const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
         var data = await response.json();
-        
-        
-        console.log(data);
+        var daytime;
        
-
+        //check for valid input
+        if(response.status == 404){
+            document.querySelector(".error").style.display = "block";
+            document.querySelector(".weather").style.display = "none";
+        }else{
+        //write in data
         document.querySelector(".city").innerHTML = data.name;
         document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°C";
         document.querySelector(".feels_like").innerHTML = Math.round(data.main.feels_like) + "°C";
@@ -99,8 +106,51 @@
 
 
         //get data for Sunrise and Sunset
-        document.querySelector(".sunset_time").innerHTML = convertLocalTime((data.sys.sunset + data.timezone)*1000);
-        document.querySelector(".sunrise_time").innerHTML = convertLocalTime((data.sys.sunrise + data.timezone)*1000);
+        let sunsetTime = (data.sys.sunset + data.timezone)*1000;
+        let sunriseTime = (data.sys.sunrise + data.timezone)*1000
+        document.querySelector(".sunset_time").innerHTML = convertLocalTime(sunsetTime);
+        document.querySelector(".sunrise_time").innerHTML = convertLocalTime(sunriseTime);
+
+        //code for displaying correct image, need day or night time
+        if ((sunriseTime < localTime) && (localTime < sunsetTime)){
+            daytime = true;
+        }else{
+            daytime = false;
+        }
+
+        if (daytime == true){
+            if(data.weather[0].main == "Clouds"){
+                weatherIcon.src = "../images/DayTime/clouds.png";
+            }else if(data.weather[0].main == "Clear"){
+                weatherIcon.src = "../images/DayTime/clear.png";
+            }else if(data.weather[0].main == "Rain"){
+                weatherIcon.src = "../images/DayTime/rain.png";
+            }else if(data.weather[0].main == "Drizzle"){
+                weatherIcon.src = "../images/DayTime/drizzle.png";
+            }else if(data.weather[0].main == "Mist"){
+                weatherIcon.src = "../images/DayTime/mist.png";
+            }else if(data.weather[0].main == "Snow"){
+                weatherIcon.src = "../images/DayAndNight/snow.png";
+            }
+        }else if (daytime == false){
+            if(data.weather[0].main == "Clouds"){
+                weatherIcon.src = "../images/NightTime/clouds.png";
+            }else if(data.weather[0].main == "Clear"){
+                weatherIcon.src = "../images/NightTime/clear.png";
+            }else if(data.weather[0].main == "Rain"){
+                weatherIcon.src = "../images/NightTime/rain.png";
+            }else if(data.weather[0].main == "Drizzle"){
+                weatherIcon.src = "../images/NightTime/drizzle.png";
+            }else if(data.weather[0].main == "Mist"){
+                weatherIcon.src = "../images/NightTime/mist.png";
+            }else if(data.weather[0].main == "Snow"){
+                weatherIcon.src = "../images/DayAndNight/snow.png";
+            }
+        }  
+
+        document.querySelector(".weather").style.display = "block";
+        document.querySelector(".error").style.display = "none";
+        }
     }
 
 
